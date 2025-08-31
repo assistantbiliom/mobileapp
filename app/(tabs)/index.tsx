@@ -1,74 +1,291 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, Platform, View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, FlatList, Keyboard, ActivityIndicator} from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
+
+import { Link } from 'expo-router';
+
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
+import {globalStyles} from '../../styles/global';
+import '../../src/localization/i18n';
+import { useTranslation } from 'react-i18next'; 
+import {apiCall, apiCall2} from '../../src/commonfunctions';
+
+import { useSession } from '../../src/context/SessionContext';
+
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+
+  const { t } = useTranslation();
+  const [myMessage, setNewMessage] = useState('');
+  const [name, setName] = useState('');
+  const listRef = useRef<FlatList>(null);
+  const messages = [];
+  let messageID = 0 ;
+  const [qNumber, setQNumber] = useState(1)
+  const flatListRef = useRef(null);
+
+  const { mSessionToken, setmSessionToken } = useSession();
+ 
+  const [nextMessageID, setNextMessageID] = useState(0); 
+  //const [messageArray, setMessageArray] = useState([{ id: 1, role: "assistant", content: t("screens.index.assistantfirstmessage"), time: "..." },]);
+  const [messageArray, setMessageArray] = useState([]);
+  const [isMesageDisabled, setIsMessageDisabled] = useState(true);
+
+  const [conversationID, setConversationID] = useState(0);
+
+
+
+  const scrollToTop = (isAnimated = false) => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToOffset({offset: 0, animated: isAnimated});
+    }
+  };
+
+
+ 
+
+  const startNewConversation = async() => {
+
+//    setMessageArray([{ id: 1, role: "assistant", content: t("screens.index.assistantfirstmessage"), time: "..." }]);
+    setMessageArray([]);
+    setIsMessageDisabled(true);
+
+    console.log("============================="); 
+    console.log(mSessionToken)
+    console.log("conversationID :", conversationID );
+    console.log("Calling API"); 
+  
+
+    const response = await apiCall(2, 'api/message', 
+      'POST', 
+      JSON.stringify (
+     { 
+        "fullConversation": [{"id":1,"role":"assistant","content":"Hi ... How can i help you?","time":"..."},{"id":2,"role":"user","content":"Test","time":"****"}], 
+        "mSessionToken": mSessionToken, 
+        "conversation_id": conversationID,
+        "requesttype": 1010 
+      })
+    );
+
+
+    console.log("API is Called"); 
+    console.log(response); 
+    console.log("============================="); 
+
+   /* 
+    messageArray.push({
+      "id": 1,
+      "role": "assistant",
+      "content": response.response,
+      "time": "xxxx"
+    }); 
+*/
+    setMessageArray(prevArray => [
+      ...prevArray,
+      {
+        id: prevArray.length + 1,
+        role: "assistant",
+        content: response.response,
+        time: "xxxx"
+      }
+    ]);
+
+
+    setConversationID(response.conversationID);
+
+    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx");
+    console.log(messageArray);
+    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx");
+
+    setIsMessageDisabled(false);
+
+//    setNewMessage('');
+  }
+
+  
+  const handleSendMessage = async () => {
+/*
+    Keyboard.dismiss();
+    await new Promise(resolve => setTimeout(resolve, 100)); 
+*/
+    setIsMessageDisabled(true);
+    setNewMessage("");
+    console.log("----");
+    console.log(myMessage);
+  
+    console.log("array - 1: ", messageArray )
+    console.log("messageArray length (1): ", messageArray.length);
+
+
+    // Get the current length of the message array for unique IDs
+    //let currentID = messageArray.length > 0 ? messageArray[messageArray.length - 1].id + 1 : 1;
+
+    let currentID = messageArray.length;
+    console.log("xxxxxx 1: ", currentID);
+
+
+
+/*
+    setMessageArray(prevArray => [
+      ...prevArray,
+      {
+        id: prevArray.length + 1,
+        role: "user",
+        content: myMessage,
+        time: "xxxx"
+      }
+    ]);
+*/
+    const userMessage = {
+      id: messageArray.length + 1,
+      role: "user",
+      content: myMessage,
+      time: "xxxx"
+    };
+
+    const updatedMessages = [...messageArray, userMessage];
+
+    setMessageArray(updatedMessages);
+//    setNewMessage("");
+
+
+    console.log("00000000000000000000000000000000000000");
+    console.log(messageArray);
+    console.log("00000000000000000000000000000000000000");
+
+    const response = await apiCall(2, 'api/message', 
+      'POST', 
+      JSON.stringify (
+     { 
+        "fullConversation": updatedMessages, 
+        "mSessionToken": mSessionToken, 
+        "conversation_id": conversationID,
+        "requesttype": 1010 
+      })
+    );
+  console.log("Returned response:", response);
+
+/*
+    setMessageArray(prevArray => [
+      ...prevArray,
+      {
+        id: prevArray.length + 1,
+        role: "assistant",
+        content: response.response,
+        time: "xxxx"
+      }
+    ]);
+*/
+    const assistantMessage = {
+      id: updatedMessages.length + 1,
+      role: "assistant",
+      content: response.response,
+      time: "xxxx"
+    };
+
+    setMessageArray(prev => [...prev, assistantMessage]);
+
+
+    setIsMessageDisabled(false);
+  };
+
+
+  const renderMessage = ({item}: {item: ItemData}) => {
+    if (item.role=="assistant") {
+//      console.log("111111")
+      return (
+        <View style={globalStyles.chatPage.chatComm.bottextcontainer}> 
+          <View style={globalStyles.chatPage.chatComm.bottextview}> 
+            <Text style={globalStyles.chatPage.chatComm.bottext}>{item.content}</Text>
+          </View>
+        </View>
+      );
+    }
+//    console.log("---22222222---")
+    return (
+      <View style={globalStyles.chatPage.chatComm.usertextcontainer}> 
+        <View style={globalStyles.chatPage.chatComm.usertextview}>
+          <Text style={globalStyles.chatPage.chatComm.usertext}>{item.content}</Text>
+        </View>
+      </View>
+    );
+
+  };
+
+
+
+   return (
+    <SafeAreaView  style={globalStyles.chatPage.safeareviewcontainer}>
+      <KeyboardAvoidingView 
+        style={globalStyles.chatPage.content} 
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+        keyboardVerticalOffset={100}
+      >
+      <View style={globalStyles.chatPage.chatComm.bottextcontainer}> 
+          <View style={globalStyles.chatPage.chatComm.bottextview}>
+            <Text style={globalStyles.chatPage.chatComm.bottext}>{t("screens.index.assistantfirstmessage")}</Text>
+          </View>
+      </View>
+
+{/*  
+          <Text style={{ padding: 10, fontSize: 16, fontWeight: 'bold' }}> 
+            This is the message header
+      </Text>
+*/}
+      <FlatList
+          data={messageArray}
+          ref={flatListRef}
+          renderItem={renderMessage}
+          ListFooterComponent={<View style={{ padding: 5 }} />}
+          keyExtractor={item => item.id.toString()}
+          onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+          onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      </KeyboardAvoidingView>
+      <View style={globalStyles.chatPage.bottomframe.content}>
+        <View style={{ flexDirection: 'row' }}>
+          <TextInput 
+            style={globalStyles.chatPage.bottomframe.bottomframetextbox} 
+            value={myMessage} 
+            onChangeText={setNewMessage}
+            onSubmitEditing={Keyboard.dismiss}
+            placeholder={t("screens.index.textplaceholder")}
+            multiline={true}
+          />
+   
+          {  !isMesageDisabled && myMessage.length>0 ? (
+              <TouchableOpacity style={globalStyles.chatPage.bottomframe.bottomframesendbutton}
+                disabled = {isMesageDisabled}
+                onPress={handleSendMessage} >  
+                <Ionicons name="send-outline" 
+                  style={[ globalStyles.chatPage.bottomframe.bottomframesendbuttontext]} >  
+                </Ionicons>
+              </TouchableOpacity>
+              )
+              : (
+                <TouchableOpacity style={globalStyles.chatPage.bottomframe.bottomframesendbuttondisabled}> 
+                <Ionicons name="send-outline" 
+                  style={[globalStyles.chatPage.bottomframe.bottomframesendbuttontext]} >  
+                </Ionicons>
+              </TouchableOpacity>
+            )
+          }
+          <TouchableOpacity style={globalStyles.chatPage.bottomframe.bottomframesendbutton}
+            onPress={startNewConversation} > 
+            <Ionicons name="add-circle-outline" 
+              style={globalStyles.chatPage.bottomframe.bottomframesendbuttontext}>  
+            </Ionicons>
+          </TouchableOpacity>
+        </View>
+      </View>
+          
+    </SafeAreaView>
+
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});

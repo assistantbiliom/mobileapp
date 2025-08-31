@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "../../../demo_projects/firstapiserver"
+		},
+		{
+			"path": "../../../chatclient"
+		},
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../../db_script"
+		}
+	],
+	"settings": {}
+}

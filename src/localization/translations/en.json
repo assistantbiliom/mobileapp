@@ -1,0 +1,124 @@
+{
+    "language": "English",
+    "screens": {
+        "index": {
+            "textplaceholder": "Write your message here... ",
+            "assistantfirstmessage" : "Hi ... You can use + button to initiate a discussion",
+        },
+        "layout": {
+            "indexTabName" : "Chat with BilioM",
+            "ordersTabName" : "My Requests", 
+            "profileTabName" : "My Profile",
+        },
+        "orders": {
+            "status": {
+                "archived" : "Archived",
+                "cancelled" : "Cancelled", 
+                "cancelreservation" : "Cancel\nReservation",
+                "cancelorder" : "Cancel\nRequest",
+                "workingoncancel" : "Cancelling"
+            }
+        },
+        "profile": {
+            "labels": {
+                "name": "Name:",
+                "surname": "Surname:",
+                "email": "E-mail:",
+                "comm_email": "Contact:",
+                "phone": "Phone:",
+                "language": "Lang.:"
+            },
+            "verificationmodal" : {
+                "verifybutton" : "Verify",
+                "cancelbutton" : "Cancel",
+                "email" : {
+                    "title" : "Verify Email",
+                    "subtitle" : "Please enter the verification code sent to"
+                },
+                "phone" : {
+                    "title" : "Verify Phone",
+                    "subtitle" : "Please enter the verification code sent to"
+                }
+            },
+            "languages": {
+                "english" : "English",
+                "turkish" : "Turkish",
+                "dutch" : "Dutch"
+            }   
+        }
+    },
+    "appmessages": {
+            "logincheckbox": {
+                "header": "Login error ", 
+                "message" : "You should accept the agreement to signup/signing",
+            },                
+            "loginerror": {
+                "header": "Login error ", 
+                "message" : "Something went wrong during login"
+            },
+            "loginerrortokenexpire": {
+                "header": "Login error ", 
+                "message" : "Your token is expired. You need to relogin"
+            },
+            "verificationcodesuccess" : {
+                "header": "Verification Code ", 
+                "message" : "Verification code sent successfully",
+            },                
+            "verificationcodefail" : {
+                "header": "Verification Code ", 
+                "message" : "Sending Verification Code Failed. Try again ...",
+            }, 
+            "verificationsuccess" : {
+                "header": "Verification Successful ", 
+                "message" : "Verification is completed successfully ",
+            }, 
+            "verificationfail" : {
+                "header": "Verification Failed ", 
+                "message" : "Verification failed. Try again ",
+            }, 
+            "verificationfailmaxretry" : {
+                "header": "Verification Failed ", 
+                "message" : "Verification failed # of times. Try again ",
+            }, 
+            "verificationfailtokenex" : {
+                "header": "Verification Failed ", 
+                "message" : "Verification token is expired. Try again ",
+            }, 
+            "unknownerror" : {
+                "header": "Unknown Error ", 
+                "message" : "Ops. Something went wrong ...",
+            }, 
+            "commemailupdatesuccess" : {
+                "header": "Profile update ", 
+                "message" : "Communication email updated successfully",
+            },                
+            "commemailupdatefail" : {
+                "header": "Profile update ", 
+                "message" : "Communication email could not be updated. Try again ...",
+            },                
+            "namesurnameupdatesuccess" : {
+                "header": "Profile update ", 
+                "message" : "Your name ans surname updated succesfully",
+            },                
+            "namesurnameupdatefail" : {
+                "header": "Profile update ", 
+                "message" : "Your name and surname could not be updated. Try again ...",
+            },                
+            "phoneupdatesuccess" : {
+                "header": "Profile update ", 
+                "message" : "Your Phone updated successfully",
+            },                
+            "phoneupdatefail" : {
+                "header": "Profile update ", 
+                "message" : "Your phone could not be updated. Try again ...",
+            },                
+            "languageupdatesuccess" : {
+                "header": "Profile update ", 
+                "message" : "Your preferred language updated succesfully",
+            },                
+            "languageupdatefail" : {
+                "header": "Profile update ", 
+                "message" : "Your preferred language could not be updated. Try again ...",
+            },                
+    },
+}

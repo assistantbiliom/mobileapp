@@ -1,0 +1,124 @@
+{
+    "language": "Turkish",
+    "screens": {
+        "index": {
+            "textplaceholder": "Mesajınızı yazınız... ",
+            "assistantfirstmessage" : "Merhaba, Konuşmayı başlatmak için + tuşuna basınız ... "
+        },
+        "layout": {
+            "indexTabName" : "BilioM ile Chat",
+            "ordersTabName" : "Taleplerim", 
+            "profileTabName" : "Profilim"
+        },
+        "orders": {
+            "status": {
+                "archived" : "Arşivlendi",
+                "cancelled" : "İptal\nEdildi", 
+                "cancelreservation" : "Reservation\nİptal\nEt",
+                "cancelorder" : "Talep\nİptal\nEt",
+                "workingoncancel" : "İptal\nEdiliyor"
+            }
+        },
+        "profile": {
+            "labels": {
+                "name": "Adınız:",
+                "surname": "Soyadınız:",
+                "email": "E-mail:",
+                "comm_email": "Iletişim:",
+                "phone": "Telefon:",
+                "language": "Dil.:"
+            },
+            "verificationmodal" : {
+                "verifybutton" : "Kaydet",
+                "cancelbutton" : "İptal",
+                "email" : {
+                    "title" : "Email Doğrula",
+                    "subtitle" : "Mail adresine gönderilen kod ile doğrula "
+                },
+                "phone" : {
+                    "title" : "Telefon Doğrula",
+                    "subtitle" : "Telefonnunuza gönderilen kod ile doğrula"
+                } 
+            },
+            "languages": {
+                "english" : "İngilizce",
+                "turkish" : "Türkçe",
+                "dutch" : "Hollandaca"
+            }
+        }
+    },
+    "appmessages": {
+            "logincheckbox": {
+                "header": "Giriş hatası ", 
+                "message" : "Sözleşmeyi onaylamalalısınız"
+            },                
+            "loginerror": {
+                "header": "Giriş hatası ", 
+                "message" : "Doğrulama sırasında bir hata oluştu"
+            },
+            "loginerrortokenexpire": {
+                "header": "Giriş hatası ", 
+                "message" : "Lütfen yeniden login olunuz"
+            },
+            "verificationcodesuccess" : {
+                "header": "Doğrulama Kodu ", 
+                "message" : "Doğrulama kodu başarılı biçimde gönderildi"
+            },                
+            "verificationcodefail" : {
+                "header": "Doğrulama Kodu  ", 
+                "message" : "Doğrulama kodu gönderilemedi. Yeniden deneyiniz ..."
+            },
+            "verificationsuccess" : {
+                "header": "Doğrulama başarılı ", 
+                "message" : "Doğrualma başarılı biçimde tamamlandı. "
+            }, 
+            "verificationfail" : {
+                "header": "Doğrulama başarısız ", 
+                "message" : "Doğrulama başarısız. Yeniden deneyiniz. "
+            }, 
+            "verificationfailmaxretry" : {
+                "header": "Doğrulama başarısız ", 
+                "message" : "Çok sayıda deneme sonunda doğrulama başarısız. Yeniden deneyiniz. "
+            },  
+            "verificationfailtokenex" : {
+                "header": "Doğrulama başarısız ", 
+                "message" : "Doğrulama kodunuz eskidi. Yeniden deneyiniz. "
+            }, 
+            "unknownerror" : {
+                "header": "Bilinmeyen hata ", 
+                "message" : "Ops. Bilinmeyen bir hata oluştu ..."
+            },                
+            "commemailupdatesuccess" : {
+                "header": "Profi güncelleme ", 
+                "message" : "İletişim mail adresiniz güncellendi"
+            },                
+            "commemailupdatefail" : {
+                "header": "Profil güncelleme ", 
+                "message" : "İletişim mail adresiniz gücellenemedi. Tekrar deneyin ..."
+            },                
+            "namesurnameupdatesuccess" : {
+                "header": "Profil güncelleme ", 
+                "message" : "Adınız ve soyasıdınız güncellendi"
+            },                
+            "namesurnameupdatefail" : {
+                "header": "Profil güncelleme ", 
+                "message" : "Adınız ve soyadınız güncellenemedi. Tekrar deneyin ..."
+            },                
+            "phoneupdatesuccess" : {
+                "header": "Profil güncelleme ", 
+                "message" : "Telefon numaranız güncellendi"
+            },                
+            "phoneupdatefail" : {
+                "header": "Profil güncelleme ", 
+                "message" : "Telefon numaranız güncellenemedi. Tekrar deneyin ..."
+            },                
+            "languageupdatesuccess" : {
+                "header": "Profil güncelleme ", 
+                "message" : "Dil tercihiniz güncellendi."
+            },                
+            "languageupdatefail" : {
+                "header": "Profil güncelleme ", 
+                "message" : "Dil tercihiniz güncellenemedi. Tekrar deneyiniz ..."
+            }                
+    }
+}
