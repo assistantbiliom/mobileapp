@@ -61,12 +61,23 @@ export default function HomeScreen() {
     console.log("conversationID :", conversationID );
     console.log("Calling API"); 
   
-
+/*
     const response = await apiCall(2, 'api/message', 
       'POST', 
       JSON.stringify (
      { 
         "fullConversation": [{"id":1,"role":"assistant","content":"Hi ... How can i help you?","time":"..."},{"id":2,"role":"user","content":"Test","time":"****"}], 
+        "mSessionToken": mSessionToken, 
+        "conversation_id": conversationID,
+        "requesttype": 1010 
+      })
+    );
+*/
+    const response = await apiCall(2, 'api/message', 
+      'POST', 
+      JSON.stringify (
+    { 
+        "fullConversation": [{"id":1,"role":"user","content":"Hi","time":"****"}], 
         "mSessionToken": mSessionToken, 
         "conversation_id": conversationID,
         "requesttype": 1010 
