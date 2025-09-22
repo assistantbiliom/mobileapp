@@ -1,5 +1,8 @@
 import { Alert } from 'react-native';
 import Toast from 'react-native-toast-message';
+import { router } from 'expo-router';
+import { useSession } from './context/SessionContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const APISERVER_1 = "https://86a37c1aaf5e.ngrok-free.app/" ;
@@ -15,6 +18,22 @@ const showToastMessage = (type, text1, text2) => {
       text2: text2,
     });
   };
+
+
+  const handleLogout = async (setmSessionToken) => {
+    try {
+      await AsyncStorage.clear(); // Remove stored token
+      setmSessionToken('0'); // Set context back to logged-out
+      router.replace('/'); // Redirect to root
+      showToastMessage('success', 'Logged Out', 'You have been logged out successfully.');
+      console.log("User logged out successfully");
+    } catch (error) {
+      console.log("Logout error: ", error);
+      showToastMessage('error', 'Logout Failed', 'An error occurred during logout.');
+      throw error; // Optionally rethrow the error for further handling
+    }
+  };
+
 
 
 const apiCall = async (urltype, uri, method = 'GET', params = null) => {
@@ -162,4 +181,4 @@ const apiCall2 = async (urltype, uri, method = 'GET', params = null) => {
 
 
 
-export { apiCall, apiCall2, showToastMessage };
+export { apiCall, apiCall2, showToastMessage, handleLogout };

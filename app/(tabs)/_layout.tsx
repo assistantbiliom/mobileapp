@@ -68,6 +68,14 @@ export default function TabLayout() {
           }}
 //          initialParams={{ mSessionToken: mSessionToken }}  
           />
+        <Tabs.Screen
+          name="test"
+          options={{
+            title: "Test",
+            tabBarIcon: ({ color }) => <Feather size={28} name="user" color='#128c7e'/>,
+          }}
+//          initialParams={{ mSessionToken: mSessionToken }}  
+          />
       </Tabs>
     );
 }

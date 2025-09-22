@@ -53,7 +53,9 @@ export default function HomeScreen() {
 
   const startNewConversation = async() => {
 
-
+    console.log("Testing return to login ...");
+    setmSessionToken(0);
+    return;
 
 
 //    setMessageArray([{ id: 1, role: "assistant", content: t("screens.index.assistantfirstmessage"), time: "..." }]);
@@ -205,6 +207,8 @@ export default function HomeScreen() {
     };
 
     setMessageArray(prev => [...prev, assistantMessage]);
+
+
     setIsMessageDisabled(false);
   };
 

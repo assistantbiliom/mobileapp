@@ -409,7 +409,7 @@ export default function TabTwoScreen() {
       setNewCommEmailValid(true);
     } else if (type===1) {  // Set new communication email
 
-      console.log("Test .......  Phone update ...  ")
+      console.log("Test .......  Email update ...  ")
 
       const response = await apiCall(1,'updateprofile', 
         'POST', 
