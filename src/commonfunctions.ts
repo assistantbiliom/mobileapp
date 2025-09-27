@@ -5,9 +5,9 @@ import { useSession } from './context/SessionContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const APISERVER_1 = "https://86a37c1aaf5e.ngrok-free.app/" ;
+const APISERVER_1 = "https://1c1cda0087df.ngrok-free.app/" ;
 //const APISERVER_1 = "http://localhost:6000/" ;
-const APISERVER_2 = "https://e16405f53f2c.ngrok-free.app/" ;
+const APISERVER_2 = "https://c2564c6f0885.ngrok-free.app/" ;
 
 
 const showToastMessage = (type, text1, text2) => {

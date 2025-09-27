@@ -68,6 +68,7 @@ export default function TabLayout() {
           }}
 //          initialParams={{ mSessionToken: mSessionToken }}  
           />
+{/* 
         <Tabs.Screen
           name="test"
           options={{
@@ -76,6 +77,7 @@ export default function TabLayout() {
           }}
 //          initialParams={{ mSessionToken: mSessionToken }}  
           />
+*/}
       </Tabs>
     );
 }

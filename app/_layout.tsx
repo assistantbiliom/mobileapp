@@ -19,6 +19,8 @@ import { apiCall, showToastMessage } from '../src/commonfunctions';
 
 import { useTranslation } from 'react-i18next';
 
+import { handleLogout } from '../src/commonfunctions';
+
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
 import {
@@ -36,7 +38,7 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   // Provider is ALWAYS mounted; UI is gated by AppGate
   return (
-    <SessionProvider initialToken={'0'}>
+    <SessionProvider initialToken={null}>
       <AppGate />
     </SessionProvider>
   );
@@ -45,6 +47,9 @@ export default function RootLayout() {
 function AppGate() {
   const colorScheme = useColorScheme();
   const { mSessionToken, setmSessionToken } = useSession(); // use context, not local state
+  const [loadingSession, setLoadingSession] = useState(true);
+
+
 
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -126,8 +131,13 @@ function AppGate() {
       // console.log("login-1");
       if (response.S == 200) {
         console.log("login-2");
+
+        setmSessionToken(response.mSessionToken);
+        await storeData(response.mSessionToken);
+/*
         storeData(response.mSessionToken);
         setmSessionToken(response.mSessionToken);
+*/
       } else {
         showToastMessage('error', t("appmessages.loginerror.header"), t("appmessages.loginerror.message"));
         // console.log("login-3");
@@ -136,7 +146,11 @@ function AppGate() {
     }
     else {   // login with locally stored mSessionToken
       if (response.S == 200) {
+        console.log("Previous Session Token");
+        console.log(mSessionToken);
         setmSessionToken(response.mSessionToken);
+        console.log("New Session Token");
+        console.log(mSessionToken);
         storeData(response.mSessionToken);
         console.log("login-4");
         console.log("Login with locally stored token is sucessfull");
@@ -146,20 +160,23 @@ function AppGate() {
         console.log("login-5");
         console.log("Login with locally stored token is not sucessfull");
         setmSessionToken('0');
-        AsyncStorage.clear();
+//        AsyncStorage.clear();
+//        handleLogout(setmSessionToken);
       }
       else if (response.S == 410) { //return to login screen 
         showToastMessage('error', t("appmessages.loginerrortokenexpire.header"), t("appmessages.loginerrortokenexpire.message"));
         console.log("login-6");
         console.log("Login with locally stored token is expired");
         setmSessionToken('0');
-        AsyncStorage.clear();
+//        handleLogout(setmSessionToken);
+//        AsyncStorage.clear();
       }
       else { //return to login screen 
         showToastMessage('error', t("appmessages.loginerror.header"), t("appmessages.loginerror.message"));
         console.log("login-6");
         console.log("Login with locally stored token is not sucessfull. Unknown Error");
         setmSessionToken('0');
+//        handleLoginBackend(setmSessionToken);
       }
     }
   };
@@ -268,6 +285,8 @@ function AppGate() {
     }
   };
 
+
+  /*
   const retrieveLocalData = async () => {
     // Clean Application data during tests if needed
     // AsyncStorage.clear()   
@@ -298,7 +317,25 @@ function AppGate() {
       // Alert.alert('Error', 'Failed to get data.');
     }
   };
+*/
+  const retrieveLocalData = async () => {
+    try {
+      const localToken = await AsyncStorage.getItem('mSessionToken');
+      if (localToken) {
+        setmSessionToken(localToken);
+        await handleLoginBackend("", "", 1, "", "", "", "", localToken);
+      } else {
+        setmSessionToken('0');
+      }
+    } catch {
+      console.log("Error retrieving mSessionToken");
+      setmSessionToken('0');
+    } finally {
+      setLoadingSession(false);
+    }
+  };
 
+  /*
   useEffect(() => {
     console.log("XXXXXXXX");
     retrieveLocalData();
@@ -307,11 +344,19 @@ function AppGate() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
-
   if (!loaded) {
-    return null;
+      return null;
+    }
+
+  */
+  useEffect(() => {
+    retrieveLocalData();
+  }, []);
+  if (loadingSession || !loaded) {
+    return null; // or splash screen
   }
 
+  
   if (mSessionToken !== '0') {
     console.log("-------------", mSessionToken);
 
