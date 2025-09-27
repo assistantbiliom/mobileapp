@@ -40,6 +40,7 @@ export default function RootLayout() {
   return (
     <SessionProvider initialToken={null}>
       <AppGate />
+        <Toast />
     </SessionProvider>
   );
 }
@@ -159,6 +160,7 @@ function AppGate() {
       else if (response.S == 400) { //return to login screen 
         console.log("login-5");
         console.log("Login with locally stored token is not sucessfull");
+        showToastMessage('error', t("appmessages.loginerrortokenexpire.header"), t("appmessages.loginerrortokenexpire.message"));
         setmSessionToken('0');
 //        AsyncStorage.clear();
 //        handleLogout(setmSessionToken);
@@ -406,6 +408,7 @@ function AppGate() {
             ))}
           </View>
         </View>
+
         <View style={globalStyles.loginPage.toastcontainer}>
           <Toast />
         </View>
