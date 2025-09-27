@@ -20,6 +20,8 @@ import { useRouter } from 'expo-router';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { handleLogout } from '../../src/commonfunctions';
+
 
 import {
   CodeField,
@@ -233,8 +235,8 @@ export default function TabTwoScreen() {
       );  
 
       console.log("Profile data:", data);
-
-      console.log(data.email)
+      console.log(data.S);
+      console.log(data.username)
       console.log(data.name)
       console.log(data.surname)
       console.log(data.comm_email)
@@ -242,22 +244,34 @@ export default function TabTwoScreen() {
       console.log(data.phone)
       console.log(data.preferred_language)
 
-      setuserprofile(data);
 
-      setNewCommEmail(data.comm_email);
-      setNewName(data.name);
-      setNewSurname(data.surname);   
-      setPhoneNumber(data.phone);
-      setPhoneCountry(data.phoneCallingCode);
-      setNewLanguage(data.preferred_language);
-      i18n.changeLanguage(data.preferred_language);   
-
-
-      setPhoneFullNumber(data.phoneCallingCode + data.phone);
-
-
-      setLoadingData(false);
-  
+      if (data.S == 200) {
+        setuserprofile(data);
+        setNewCommEmail(data.comm_email);
+        setNewName(data.name);
+        setNewSurname(data.surname);   
+        setPhoneNumber(data.phone);
+        setPhoneCountry(data.phoneCallingCode);
+        setNewLanguage(data.preferred_language);
+        i18n.changeLanguage(data.preferred_language);   
+        setPhoneFullNumber(data.phoneCallingCode + data.phone);
+        setLoadingData(false);
+      } else if (data.S == 400) {
+        showToastMessage('error', t("appmessages.unknownerror.header"), t("appmessages.unknownerror.message"));         
+        setTimeout(() => {
+          handleLogout(setmSessionToken);
+          console.log("Token issues ...");
+        }, 1000);              
+      }
+      else {
+        showToastMessage('error', t("appmessages.unknownerror.header"), t("appmessages.unknownerror.message"));   
+        setTimeout(() => {
+          handleLogout(setmSessionToken);
+          console.log("Other issues ...");
+        }, 1000);              
+//        handleLogout(setmSessionToken) ;
+//        console.log("Other issues ...")
+      }
     } catch (error) {
        console.log("Error fetching profile :", error);
        setLoadingData(false)
