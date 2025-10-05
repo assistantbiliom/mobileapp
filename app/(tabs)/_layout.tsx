@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useSession } from '../../src/context/SessionContext';
+import Toast from 'react-native-toast-message';
 
 
 export default function TabLayout() {
@@ -28,6 +29,7 @@ export default function TabLayout() {
 
   
     return (
+      <>
 
       <Tabs
         screenOptions={{
@@ -79,5 +81,8 @@ export default function TabLayout() {
           />
 */}
       </Tabs>
+{/*             <Toast /> */}
+      </>
+
     );
 }

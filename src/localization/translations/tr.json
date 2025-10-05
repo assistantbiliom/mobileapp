@@ -119,6 +119,15 @@
             "languageupdatefail" : {
                 "header": "Profil güncelleme ", 
                 "message" : "Dil tercihiniz güncellenemedi. Tekrar deneyiniz ..."
+            },
+            "notenoughcredit" : {
+                "header": "Kredi Problemi ", 
+                "message" : "Yeteri kadar krediniz yok. Yeni kredi alınız ...",
+            },                
+            "ordertaken" : {
+                "header": "Talebiniz alındı ", 
+                "message" : "Talebinizi aldık. İşleme koyacağız ...",
             }                
+                
     }
 }

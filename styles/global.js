@@ -170,6 +170,13 @@ export const globalStyles = StyleSheet.create({
           elevation: 3,
           bottom: 40,
         },
+        toastcontent: {
+          padding: 10,
+          backgroundColor: '#F8F5EA',
+          alignItems: 'center',
+          elevation: 3,
+          bottom: 80,
+        },
         bottomframetextbox: {
           flex: 1,
           borderWidth: 1,

@@ -120,5 +120,13 @@
                 "header": "Profile update ", 
                 "message" : "Your preferred language could not be updated. Try again ...",
             },                
-    },
+            "notenoughcredit" : {
+                "header": "Credit Issue ", 
+                "message" : "You don't have enough credit to do thıs. Add new credit to continue ...",
+            },                
+            "ordertaken" : {
+                "header": "Your Order ", 
+                "message" : "Your order is recorded. We will start processing your order ...",
+            }                
+   }
 }

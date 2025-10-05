@@ -16,7 +16,9 @@ import { ThemedView } from '@/components/ThemedView';
 import {globalStyles} from '../../styles/global';
 import '../../src/localization/i18n';
 import { useTranslation } from 'react-i18next'; 
-import {apiCall, apiCall2} from '../../src/commonfunctions';
+import {apiCall, apiCall2, handleLogout, showToastMessage} from '../../src/commonfunctions';
+import Toast from 'react-native-toast-message';
+
 
 import { useSession } from '../../src/context/SessionContext';
 
@@ -53,10 +55,6 @@ export default function HomeScreen() {
 
   const startNewConversation = async() => {
 
-
-
-
-//    setMessageArray([{ id: 1, role: "assistant", content: t("screens.index.assistantfirstmessage"), time: "..." }]);
     setMessageArray([]);
     setIsMessageDisabled(true);
 
@@ -65,18 +63,6 @@ export default function HomeScreen() {
     console.log("conversationID :", conversationID );
     console.log("Calling API"); 
   
-/*
-    const response = await apiCall(2, 'api/message', 
-      'POST', 
-      JSON.stringify (
-     { 
-        "fullConversation": [{"id":1,"role":"assistant","content":"Hi ... How can i help you?","time":"..."},{"id":2,"role":"user","content":"Test","time":"****"}], 
-        "mSessionToken": mSessionToken, 
-        "conversation_id": conversationID,
-        "requesttype": 1010 
-      })
-    );
-*/
     const response = await apiCall(2, 'api/message', 
       'POST', 
       JSON.stringify (
@@ -88,40 +74,40 @@ export default function HomeScreen() {
       })
     );
 
-
     console.log("API is Called"); 
     console.log(response); 
     console.log("============================="); 
 
-   /* 
-    messageArray.push({
-      "id": 1,
-      "role": "assistant",
-      "content": response.response,
-      "time": "xxxx"
-    }); 
-*/
-    setMessageArray(prevArray => [
-      ...prevArray,
-      {
-        id: prevArray.length + 1,
-        role: "assistant",
-        content: response.response,
-        time: "xxxx"
-      }
-    ]);
+    if (response.S == 200) {  // Successfull Response 
+      setMessageArray(prevArray => [
+        ...prevArray,
+        {
+          id: prevArray.length + 1,
+          role: "assistant",
+          content: response.response,
+          time: "xxxx"
+        }
+      ]);
+  
+  
+      setConversationID(response.conversationID);
+  
+      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx");
+      console.log(messageArray);
+      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx");
+  
+      setIsMessageDisabled(false);
+  
 
+    } else if (response.S == 400) {  // Payload issue
+        if (response.statusCode == 400 || response.statusCode == 310) { //session is expired or conversationId issue
+          handleLogout(setmSessionToken); 
+        } else if (response.statusCode == 500 || response.statusCode == 510) { //Either no credit or no wallet 
+          showToastMessage('error', t("appmessages.notenoughcredit.header"), t("appmessages.notenoughcredit.message"));   
+        }
+    }
 
-    setConversationID(response.conversationID);
-
-    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx");
-    console.log(messageArray);
-    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx");
-
-    setIsMessageDisabled(false);
-
-//    setNewMessage('');
-  }
+}
 
   
   const handleSendMessage = async () => {
@@ -146,17 +132,6 @@ export default function HomeScreen() {
 
 
 
-/*
-    setMessageArray(prevArray => [
-      ...prevArray,
-      {
-        id: prevArray.length + 1,
-        role: "user",
-        content: myMessage,
-        time: "xxxx"
-      }
-    ]);
-*/
     const userMessage = {
       id: messageArray.length + 1,
       role: "user",
@@ -186,26 +161,28 @@ export default function HomeScreen() {
     );
   console.log("Returned response:", response);
 
-/*
-    setMessageArray(prevArray => [
-      ...prevArray,
-      {
-        id: prevArray.length + 1,
+  if (response.S == 200) {  // Successfull Response 
+      const assistantMessage = {
+        id: updatedMessages.length + 1,
         role: "assistant",
         content: response.response,
         time: "xxxx"
-      }
-    ]);
-*/
-    const assistantMessage = {
-      id: updatedMessages.length + 1,
-      role: "assistant",
-      content: response.response,
-      time: "xxxx"
-    };
+      };
 
-    setMessageArray(prev => [...prev, assistantMessage]);
-    setIsMessageDisabled(false);
+      setMessageArray(prev => [...prev, assistantMessage]);
+      setIsMessageDisabled(false);
+      if (response.statusCode == 200) { // Conversation is finished succesfully 
+        showToastMessage('error', t("appmessages.ordertaken.header"), t("appmessages.ordertaken.message"));   
+      }
+
+    } else if (response.S == 400) {  // Payload issue
+      console.log(response.S, "****", response.statusCode);
+        if (response.statusCode == 400 || response.statusCode == 310) { //session is expired or conversationId issue
+          handleLogout(setmSessionToken); 
+        } else if (response.statusCode == 500 || response.statusCode == 510) { //Either no credit or no wallet 
+          showToastMessage('error', t("appmessages.notenoughcredit.header"), t("appmessages.notenoughcredit.message"));   
+        }
+    }
   };
 
 
@@ -261,6 +238,11 @@ export default function HomeScreen() {
           onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })}
         />
       </KeyboardAvoidingView>
+      <View style={globalStyles.chatPage.bottomframe.toastcontent}>
+          <View style={globalStyles.profilePage.toastcontainer}>
+                  <Toast />
+            </View>
+        </View>
       <View style={globalStyles.chatPage.bottomframe.content}>
         <View style={{ flexDirection: 'row' }}>
           <TextInput 
@@ -295,9 +277,13 @@ export default function HomeScreen() {
               style={globalStyles.chatPage.bottomframe.bottomframesendbuttontext}>  
             </Ionicons>
           </TouchableOpacity>
+{/* 
+          <TouchableOpacity onPress={() => showToastMessage('error', 'Test Title', 'This is a test')}>
+            <Text>Show Toast</Text>
+          </TouchableOpacity>
+*/}
         </View>
       </View>
-          
     </SafeAreaView>
 
   );
