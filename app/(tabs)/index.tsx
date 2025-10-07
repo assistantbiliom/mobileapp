@@ -277,11 +277,6 @@ export default function HomeScreen() {
               style={globalStyles.chatPage.bottomframe.bottomframesendbuttontext}>  
             </Ionicons>
           </TouchableOpacity>
-{/* 
-          <TouchableOpacity onPress={() => showToastMessage('error', 'Test Title', 'This is a test')}>
-            <Text>Show Toast</Text>
-          </TouchableOpacity>
-*/}
         </View>
       </View>
     </SafeAreaView>
