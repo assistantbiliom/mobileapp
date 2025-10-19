@@ -115,7 +115,7 @@ export default function HomeScreen() {
     Keyboard.dismiss();
     await new Promise(resolve => setTimeout(resolve, 100)); 
 */
-    showToastMessage('info', "Test header", "Test message");         
+//   showToastMessage('info', "Test header", "Test message");         
     
 
     setIsMessageDisabled(true);

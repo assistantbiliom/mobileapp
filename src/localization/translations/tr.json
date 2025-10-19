@@ -16,7 +16,12 @@
                 "cancelled" : "İptal\nEdildi", 
                 "cancelreservation" : "Reservation\nİptal\nEt",
                 "cancelorder" : "Talep\nİptal\nEt",
-                "workingoncancel" : "İptal\nEdiliyor"
+                "workingoncancel" : "İptal\nEdiliyor",
+                "processing" : "Talebiniz\nİşleniyor",
+                "rejected" : "Reddedildi",
+                "systemerror" : "Sistem\nHatası",
+                "hour" : "saat"
+
             }
         },
         "profile": {
@@ -122,12 +127,20 @@
             },
             "notenoughcredit" : {
                 "header": "Kredi Problemi ", 
-                "message" : "Yeteri kadar krediniz yok. Yeni kredi alınız ...",
+                "message" : "Yeteri kadar krediniz yok. Yeni kredi alınız ..."
             },                
             "ordertaken" : {
                 "header": "Talebiniz alındı ", 
-                "message" : "Talebinizi aldık. İşleme koyacağız ...",
-            }                
+                "message" : "Talebinizi aldık. İşleme koyacağız ..."
+            },                
+            "orderupdateerror" : {
+                "header": "Güncelleme Talebiniz ", 
+                "message" : "Talebiniz güncellenemedi. Lütfen daha sonra deneyiniz ..."
+            },                                
+            "orderupdatesuccess" : {
+                "header": "Güncelleme Talebiniz ", 
+                "message" : "Güncelleme talebiniz gerçekleştirildi ..."
+            }                                
                 
     }
 }

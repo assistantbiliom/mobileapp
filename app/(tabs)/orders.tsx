@@ -41,29 +41,42 @@ export default function TabTwoScreen() {
     const [myOrders, setMyOrders] = useState('');
     
 
-    const handleCancelOrder= async (item) => {
+    const updateRequest= async (item, newStatus) => {
 
       console.log("Test !!!! ")
       console.log(item.orderid)
 
       try {
-        const data = await apiCall(1, 'cancelorder', 
+        const data = await apiCall(1, 'updaterequest', 
           'POST', 
           JSON.stringify (
             { 
               "mSessionToken": mSessionToken,
-              "orderid": item.orderid
+              "reservationid": item.reservationid,
+              "newStatus": newStatus
             }
           )
         );  
 //        setMyOrders(data.ordersresponsearray);
         console.log("order data ... ", data);
+
+        if (data.S == 200) {
+          setMyOrders(data.requests);
+          showToastMessage('info', t("appmessages.orderupdatesuccess.header"), t("appmessages.orderupdatesuccess.message"));        
+
+        }
+        else {
+          showToastMessage('error', t("appmessages.orderupdateerror.header"), t("appmessages.orderupdateerror.message"));        
+        }
+
       } catch (error) {
-//         console.log("Error fetching orders :", error);
+        showToastMessage('error', t("appmessages.orderupdateerror.header"), t("appmessages.orderupdateerror.message"));         
+        setTimeout(() => {
+          handleLogout(setmSessionToken);
+        }, 1000);              
+        console.log("Error cancelling order :", error);
       }
       
-      console.log("cccccccccccc")
-
     };
 
 
@@ -80,20 +93,26 @@ export default function TabTwoScreen() {
         );  
 
         if (data.S == 200) {
-          setMyOrders(data.ordersresponsearray);
+
+          setMyOrders(data.requests);
         }
         else {
           showToastMessage('error', t("appmessages.unknownerror.header"), t("appmessages.unknownerror.message"));         
           setTimeout(() => {
-          handleLogout(setmSessionToken);
-          console.log("Token issues ...");
-        }, 1000);              
+            handleLogout(setmSessionToken);
+            console.log("Token issues ...");
+          }, 1000);              
           
         }
 
-        console.log("Profile data:", data);
+        console.log("Get user data:", data);
 
       } catch (error) {
+        showToastMessage('error', t("appmessages.unknownerror.header"), t("appmessages.unknownerror.message"));         
+        setTimeout(() => {
+          handleLogout(setmSessionToken);
+          console.log("Token issues ...");
+        }, 1000);              
          console.log("Error fetching orders :", error);
       }
     };
@@ -104,7 +123,13 @@ export default function TabTwoScreen() {
           <View style={globalStyles.ordersPage.rowcontentcontainer}> 
            {/* Status Area*/}
 
-             { (item.status == "Done" || item.status == "Cancelled" || item.status == "Cancelling")  && (
+             { ( item.status == "Done" || 
+                 item.status == "Cancelled" || 
+                 item.status == "Cancelling" ||
+                 item.status == "Processing" ||
+                 item.status == "Rejected" ||
+                 item.status == "System Error" 
+                ) && (
 
                 <View style={globalStyles.ordersPage.rowcontentstatusreadonly}>
                   { item.status == "Done" && (
@@ -130,10 +155,37 @@ export default function TabTwoScreen() {
                     </View>
                   )
                   }
+                  { item.status == "Processing" && (
+                    <View>
+                      <MaterialIcons 
+                        name="settings-phone" 
+                        style={globalStyles.ordersPage.rowcontentstatuscontentreadonly}  
+                      /> 
+                    </View>
+                  )
+                  }
+                  { item.status == "Rejected" && (
+                    <View>
+                      <MaterialIcons 
+                        name="stop-circle" 
+                        style={globalStyles.ordersPage.rowcontentstatuscontentreadonly}  
+                      /> 
+                    </View>
+                  )
+                  }
+                  { item.status == "System Error" && (
+                    <View>
+                      <MaterialIcons 
+                        name="error-outline" 
+                        style={globalStyles.ordersPage.rowcontentstatuscontentreadonly}  
+                      /> 
+                    </View>
+                  )
+                  }
                </View>
               )
             }
-            { (item.status == "Confirmed" || item.status == "Waiting")   && (
+            { (item.status == "Confirmed" || item.status == "Requested")   && (
               <View style={globalStyles.ordersPage.rowcontentstatus}>
                 { item.status == "Confirmed" && (
                   <View>
@@ -144,7 +196,7 @@ export default function TabTwoScreen() {
                   </View>
                 )
                 }
-                { item.status == "Waiting" && (
+                { item.status == "Requested" && (
                   <View>
                     <MaterialIcons 
                       name="settings-phone" 
@@ -157,30 +209,43 @@ export default function TabTwoScreen() {
              )
             }
             {/* Date Time */}
-            { (item.status == "Done" || item.status == "Cancelled" || item.status == "Cancelling")  && (
+            { (
+              item.status == "Done" || 
+              item.status == "Cancelled" || 
+              item.status == "Cancelling" ||
+              item.status == "Processing" ||
+              item.status == "Rejected" ||
+              item.status == "System Error" 
+              )  && (
               <View style={globalStyles.ordersPage.rowcontenttimerestcontainerreadonly}>
                   <TextInput 
                     style={globalStyles.ordersPage.rowcontenttimerestcontainercontentreadonly} 
                     multiline={true}
                     editable={false} 
-                    value={`${item.date}\n${item.time}`}
+                    value={`${item.date}\n${item.time}\n(${item.duration} ${t("screens.orders.status.hour")})`}
                   />  
               </View>
               )
             }
-            { (item.status == "Confirmed" || item.status == "Waiting")   && (
+            { (item.status == "Confirmed" || item.status == "Requested")   && (
               <View style={globalStyles.ordersPage.rowcontenttextboxcontainer}>
                   <TextInput 
                       style={globalStyles.ordersPage.rowcontenttimerestcontainercontent} 
                       multiline={true}
                       editable={false} 
-                      value={`${item.date}\n${item.time}`}
+                      value={`${item.date}\n${item.time}\n(${item.duration} ${t("screens.orders.status.hour")})`}
                       />            
               </View>
              )
            }
           {/* Restaurant */}
-            { (item.status == "Done" || item.status == "Cancelled" || item.status == "Cancelling")  && (
+            { (item.status == "Done" || 
+                 item.status == "Cancelled" || 
+                 item.status == "Cancelling" ||
+                 item.status == "Processing" ||
+                 item.status == "Rejected" ||
+                 item.status == "System Error" 
+               )  && (
               <View style={globalStyles.ordersPage.rowcontenttimerestcontainerreadonly}>
                   <TextInput 
                     style={globalStyles.ordersPage.rowcontenttimerestcontainercontentreadonly} 
@@ -191,7 +256,7 @@ export default function TabTwoScreen() {
               </View>
               )
             }
-            { (item.status == "Confirmed" || item.status == "Waiting")   && (
+            { (item.status == "Confirmed" || item.status == "Requested")   && (
               <View style={globalStyles.ordersPage.rowcontenttextboxcontainer}>
                   <TextInput 
                       style={globalStyles.ordersPage.rowcontenttimerestcontainercontent} 
@@ -205,7 +270,13 @@ export default function TabTwoScreen() {
 
           {/* #of Person */}
 
-          { (item.status == "Done" || item.status == "Cancelled" || item.status == "Cancelling")  && (
+          { (item.status == "Done" || 
+                 item.status == "Cancelled" || 
+                 item.status == "Cancelling" ||
+                 item.status == "Processing" ||
+                 item.status == "Rejected" ||
+                 item.status == "System Error" 
+               )  && (
            <View style={globalStyles.ordersPage.rowcontentpersoncontainerreadonly}>
             <TextInput 
                     style={globalStyles.ordersPage.rowcontentpersonreadonly} 
@@ -219,7 +290,7 @@ export default function TabTwoScreen() {
            </View>
            )
           }
-          { (item.status == "Confirmed" || item.status == "Waiting")   && (
+          { (item.status == "Confirmed" || item.status == "Requested")   && (
            <View style={globalStyles.ordersPage.rowcontentpersoncontainer}>
               <TextInput 
                       style={globalStyles.ordersPage.rowcontentperson} 
@@ -236,7 +307,13 @@ export default function TabTwoScreen() {
 
             {/* Action Area */}
 
-            { (item.status == "Done" || item.status == "Cancelled" || item.status == "Cancelling")  && (
+            { (item.status == "Done" || 
+                 item.status == "Cancelled" || 
+                 item.status == "Cancelling" ||
+                 item.status == "Processing" ||
+                 item.status == "Rejected" ||
+                 item.status == "System Error" 
+               )  && (
             <View style={globalStyles.ordersPage.rowcontentactioncontainerreadonly}>
               { item.status == "Done" && (
                 <TextInput 
@@ -265,26 +342,54 @@ export default function TabTwoScreen() {
                 />
                 )
               }
+              { item.status == "Processing" && (
+                <TextInput 
+                 style={globalStyles.ordersPage.rowcontentactionreadonly} 
+                  multiline={true}
+                  editable={false} 
+                  value={t("screens.orders.status.processing")}
+                />
+                )
+              }
+              { item.status == "Rejected" && (
+                <TextInput 
+                 style={globalStyles.ordersPage.rowcontentactionreadonly} 
+                  multiline={true}
+                  editable={false} 
+                  value={t("screens.orders.status.rejected")}
+                />
+                )
+              }
+              { item.status == "System Error" && (
+                <TextInput 
+                 style={globalStyles.ordersPage.rowcontentactionreadonly} 
+                  multiline={true}
+                  editable={false} 
+                  value={t("screens.orders.status.systemerror")}
+                />
+                )
+              }
+
             </View>
               ) }
 
         {
-         (item.status == "Confirmed" || item.status == "Waiting")   && (
+         (item.status == "Confirmed" || item.status == "Requested")   && (
 
           <View style={globalStyles.ordersPage.rowcontentactioncontainer}>
             {item.status === "Confirmed" && (
               <TouchableOpacity 
 //                style={globalStyles.ordersPage.rowcontentaction}
-                onPress={() => handleCancelReservation(item)}
+                onPress={() => updateRequest(item,4500)}
               >
                 <Text style={globalStyles.ordersPage.rowcontentaction}>{t("screens.orders.status.cancelreservation")}</Text>
               </TouchableOpacity>
             )}
 
-            {item.status === "Waiting" && (
+            {item.status === "Requested" && (
               <TouchableOpacity 
 //                style={globalStyles.ordersPage.rowcontentaction}
-                onPress={() => handleCancelOrder(item)}
+                onPress={() => updateRequest(item,4000)}
               >
                 <Text style={globalStyles.ordersPage.rowcontentaction} >{t("screens.orders.status.cancelorder")}</Text>
               </TouchableOpacity>
@@ -368,7 +473,7 @@ export default function TabTwoScreen() {
   //      ref={orderid}
         renderItem={renderOrders}
         ListFooterComponent={<View style={{ padding: 5 }} />}
-        keyExtractor={item => item.orderid.toString()}
+        keyExtractor={item => item.reservationid.toString()}
 //        contentContainerStyle={{flex: 1 }} // 🔥 This ensures items stretch
   //      onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
   //      onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })}

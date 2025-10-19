@@ -16,7 +16,11 @@
                 "cancelled" : "Cancelled", 
                 "cancelreservation" : "Cancel\nReservation",
                 "cancelorder" : "Cancel\nRequest",
-                "workingoncancel" : "Cancelling"
+                "workingoncancel" : "Cancelling",
+                "processing" : "Processing\nRequest",
+                "rejected" : "Rejected",
+                "systemerror" : "System\nError",
+                "hour" : "hr."
             }
         },
         "profile": {
@@ -125,8 +129,16 @@
                 "message" : "You don't have enough credit to do thıs. Add new credit to continue ...",
             },                
             "ordertaken" : {
-                "header": "Your Order ", 
-                "message" : "Your order is recorded. We will start processing your order ...",
-            }                
+                "header": "Your Request ", 
+                "message" : "Your request is recorded. We will start processing your request ...",
+            },
+            "orderupdateerror" : {
+                "header": "Update of Request ", 
+                "message" : "Error during updating of your request. Please try again later ..."
+            },                                
+            "orderupdatesuccess" : {
+                "header": "Update of Request ", 
+                "message" : "Your request is updated succesfully ..."
+            }                                
    }
 }
