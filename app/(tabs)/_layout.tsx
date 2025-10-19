@@ -80,8 +80,8 @@ export default function TabLayout() {
 //          initialParams={{ mSessionToken: mSessionToken }}  
           />
 */}
-      </Tabs>
-{/*             <Toast /> */}
+      </Tabs>             
+      <Toast /> 
       </>
 
     );

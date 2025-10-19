@@ -115,6 +115,9 @@ export default function HomeScreen() {
     Keyboard.dismiss();
     await new Promise(resolve => setTimeout(resolve, 100)); 
 */
+    showToastMessage('info', "Test header", "Test message");         
+    
+
     setIsMessageDisabled(true);
     setNewMessage("");
     console.log("----");
@@ -129,7 +132,6 @@ export default function HomeScreen() {
 
     let currentID = messageArray.length;
     console.log("xxxxxx 1: ", currentID);
-
 
 
     const userMessage = {
@@ -238,11 +240,13 @@ export default function HomeScreen() {
           onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })}
         />
       </KeyboardAvoidingView>
+  {/* 
       <View style={globalStyles.chatPage.bottomframe.toastcontent}>
           <View style={globalStyles.profilePage.toastcontainer}>
                   <Toast />
-            </View>
-        </View>
+            </View> 
+      </View>
+  */}
       <View style={globalStyles.chatPage.bottomframe.content}>
         <View style={{ flexDirection: 'row' }}>
           <TextInput 

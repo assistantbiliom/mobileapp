@@ -224,6 +224,7 @@ export default function TabTwoScreen() {
 
 
   const getProfile = async () => {
+
     try {
       const data = await apiCall(1, 'getprofile', 
         'POST', 
@@ -879,10 +880,11 @@ const [languages, setLanguages] = useState([
               </View>
         </View>
       </View>
+{/* 
         <View style={globalStyles.profilePage.toastcontainer}>
               <Toast />
         </View>
-
+*/}
       <Modal visible={modalVisible} transparent={true} animationType="slide">
         <View style={globalStyles.profilePage.codeverificationmodalcontainer}>
           <View style={globalStyles.profilePage.codeverificationmodalContent}>

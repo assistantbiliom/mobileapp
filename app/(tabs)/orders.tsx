@@ -7,13 +7,16 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useTranslation } from 'react-i18next'; 
+import Toast from 'react-native-toast-message';
+
 
 
 import { Tabs, useLocalSearchParams } from 'expo-router';
 
 import React, { useState, useEffect } from 'react';
 
-import {apiCall, showToastMessage } from '../../src/commonfunctions';
+import {apiCall, showToastMessage, handleLogout } from '../../src/commonfunctions';
+
 
 import {globalStyles,
   BRANDCOLOR_INPUTDATA,
@@ -25,12 +28,15 @@ import { AntDesign } from '@expo/vector-icons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+
+import { useSession } from '../../src/context/SessionContext';
   
 
 export default function TabTwoScreen() {
     const { t } = useTranslation();
   
-    const { mSessionToken } = useLocalSearchParams(); // Retrieve mSessionToken
+//    const { mSessionToken } = useLocalSearchParams(); // Retrieve mSessionToken
+    const { mSessionToken, setmSessionToken } = useSession();
 
     const [myOrders, setMyOrders] = useState('');
     
@@ -64,16 +70,29 @@ export default function TabTwoScreen() {
     const getOrders = async () => {
 
       try {
-        const data = await apiCall(1, 'getorders', 
-          'GET', 
+        const data = await apiCall(1, 'getrequests', 
+          'POST', 
           JSON.stringify (
             { 
               "mSessionToken": mSessionToken,
             }
           )
         );  
-        setMyOrders(data.ordersresponsearray);
+
+        if (data.S == 200) {
+          setMyOrders(data.ordersresponsearray);
+        }
+        else {
+          showToastMessage('error', t("appmessages.unknownerror.header"), t("appmessages.unknownerror.message"));         
+          setTimeout(() => {
+          handleLogout(setmSessionToken);
+          console.log("Token issues ...");
+        }, 1000);              
+          
+        }
+
         console.log("Profile data:", data);
+
       } catch (error) {
          console.log("Error fetching orders :", error);
       }
@@ -354,6 +373,11 @@ export default function TabTwoScreen() {
   //      onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
   //      onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })}
       />
+{/*       
+      <View>
+        <Toast />
+      </View>
+*/}      
   </View>
  /*
     <ParallaxScrollView

@@ -16,6 +16,10 @@ const showToastMessage = (type, text1, text2) => {
       type: type, // 'success' | 'error' | 'info'
       text1: text1,
       text2: text2,
+      position: 'bottom',
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 50,
     });
   };
 
