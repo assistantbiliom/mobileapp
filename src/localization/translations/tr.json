@@ -21,7 +21,9 @@
                 "rejected" : "Reddedildi",
                 "systemerror" : "Sistem\nHatası",
                 "hour" : "saat"
-
+            }, 
+            "pullToRefresh" : {
+                "title": "Yenilemek için çekin ..."
             }
         },
         "profile": {

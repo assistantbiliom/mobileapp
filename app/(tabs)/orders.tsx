@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Platform, FlatList, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, Platform, FlatList, View, Text, TextInput, TouchableOpacity,  ScrollView, RefreshControl } from 'react-native';
 
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -13,7 +13,7 @@ import Toast from 'react-native-toast-message';
 
 import { Tabs, useLocalSearchParams } from 'expo-router';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import {apiCall, showToastMessage, handleLogout } from '../../src/commonfunctions';
 
@@ -39,7 +39,8 @@ export default function TabTwoScreen() {
     const { mSessionToken, setmSessionToken } = useSession();
 
     const [myOrders, setMyOrders] = useState('');
-    
+
+    const [refreshing, setRefreshing] = useState(false);    
 
     const updateRequest= async (item, newStatus) => {
 
@@ -431,7 +432,11 @@ export default function TabTwoScreen() {
           </View>
         );
     }
-
+    const onRefresh = useCallback(async () => {
+      setRefreshing(true);
+      await getOrders();
+      setRefreshing(false);
+    }, [mSessionToken]);
     useEffect(() => {
       getOrders();
     }, []);
@@ -442,29 +447,6 @@ export default function TabTwoScreen() {
 
     <View style={globalStyles.ordersPage.datacontainer}> 
 
-{/* 
-      <View style={globalStyles.ordersPage.rowcontentcontainer}> 
-                  <View style={globalStyles.ordersPage.rowcontenttextboxcontainer}>
-                      <TextInput 
-                        style={globalStyles.ordersPage.rowcontenttextboxreadonly} 
-                        multiline={true}
-                        editable={false} 
-                        value="Adem"
-                      />
-        
-                  </View>
-                  <View style={globalStyles.ordersPage.rowcontenttextboxcontainer}>
-
-                    <TextInput 
-                        style={globalStyles.ordersPage.rowcontenttextboxreadonly} 
-                        multiline={true}
-                        editable={false} 
-                        value="Badem"
-                      />
-                  
-                </View>
-        </View>
-*/}
 
       <FlatList
         style={{ width: "100%" }} 
@@ -474,32 +456,21 @@ export default function TabTwoScreen() {
         renderItem={renderOrders}
         ListFooterComponent={<View style={{ padding: 5 }} />}
         keyExtractor={item => item.reservationid.toString()}
-//        contentContainerStyle={{flex: 1 }} // 🔥 This ensures items stretch
+ //       contentContainerStyle={{flex: 1 }} // 🔥 This ensures items stretch
   //      onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
   //      onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })}
-      />
-{/*       
-      <View>
-        <Toast />
-      </View>
-*/}      
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={['#128c7e']} // Android spinner color
+              tintColor="#128c7e" // iOS spinner color
+              title={t('screens.orders.pullToRefresh.title')}
+              titleColor="#128c7e"
+            />
+          }
+          />
   </View>
- /*
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-*/
   );
 }
 

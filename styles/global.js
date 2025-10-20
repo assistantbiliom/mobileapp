@@ -165,10 +165,11 @@ export const globalStyles = StyleSheet.create({
       bottomframe: {
         content: {
           padding: 10,
+//          paddingBottom: Platform.OS === 'ios' ? 15 : 10, // Slightly more padding on iOS
           backgroundColor: '#F8F5EA',
           alignItems: 'center',
           elevation: 3,
-          bottom: 40,
+//          bottom: 40,
         },
         toastcontent: {
           padding: 10,

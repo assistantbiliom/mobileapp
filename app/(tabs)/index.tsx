@@ -1,5 +1,7 @@
 import { Image, StyleSheet, Platform, View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, FlatList, Keyboard, ActivityIndicator} from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
@@ -213,11 +215,21 @@ export default function HomeScreen() {
 
 
    return (
-    <SafeAreaView  style={globalStyles.chatPage.safeareviewcontainer}>
+
+    
+    <SafeAreaView  style={globalStyles.chatPage.safeareviewcontainer} edges={Platform.OS === 'ios' ? ['top', 'bottom'] : ['top']}>
+
       <KeyboardAvoidingView 
-        style={globalStyles.chatPage.content} 
+        style={globalStyles.chatPage.content}   
+//        behavior="padding"
+//        keyboardVerticalOffset={Platform.OS === 'ios' ? -20 : -30}
+
+//        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+        
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-        keyboardVerticalOffset={100}
+//        keyboardVerticalOffset={100}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0} // Adjust for Android
+
       >
       <View style={globalStyles.chatPage.chatComm.bottextcontainer}> 
           <View style={globalStyles.chatPage.chatComm.bottextview}>
@@ -234,12 +246,12 @@ export default function HomeScreen() {
           data={messageArray}
           ref={flatListRef}
           renderItem={renderMessage}
-          ListFooterComponent={<View style={{ padding: 5 }} />}
+          ListFooterComponent={<View style={{ padding: 0 }} />}
           keyExtractor={item => item.id.toString()}
           onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
           onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })}
         />
-      </KeyboardAvoidingView>
+  </KeyboardAvoidingView>
   {/* 
       <View style={globalStyles.chatPage.bottomframe.toastcontent}>
           <View style={globalStyles.profilePage.toastcontainer}>

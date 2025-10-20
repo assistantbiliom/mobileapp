@@ -21,6 +21,9 @@
                 "rejected" : "Rejected",
                 "systemerror" : "System\nError",
                 "hour" : "hr."
+            },
+            "pullToRefresh" : {
+                "title": "Pull to refresh ..."
             }
         },
         "profile": {

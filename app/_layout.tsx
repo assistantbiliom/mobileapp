@@ -50,12 +50,14 @@ function AppGate() {
 
   const [agreementIsSelected, setAgreementSelected] = useState(true);
 
+  /*
   GoogleSignin.configure({
     webClientId: '49834723992-qrtv1rgpisc5heqr1e07ftt9et6u8d0c.apps.googleusercontent.com',
     iosClientId: '49834723992-1vutq00ihqi4e5jjr8rqvk3of4ultv3b.apps.googleusercontent.com',
     offlineAccess: true,
     forceCodeForRefreshToken: true,
   });
+*/
 
   const handleLoginBackend = async (
     platformName: string,
@@ -188,6 +190,12 @@ function AppGate() {
   // Retrieve session once on mount
   useEffect(() => {
     retrieveLocalData();
+    GoogleSignin.configure({
+      webClientId: '49834723992-qrtv1rgpisc5heqr1e07ftt9et6u8d0c.apps.googleusercontent.com',
+      iosClientId: '49834723992-1vutq00ihqi4e5jjr8rqvk3of4ultv3b.apps.googleusercontent.com',
+      offlineAccess: true,
+      forceCodeForRefreshToken: true,
+    });
   }, []);
 
   // Hide splash screen when ready

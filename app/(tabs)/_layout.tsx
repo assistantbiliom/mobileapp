@@ -37,6 +37,25 @@ export default function TabLayout() {
           headerShown: true,
           tabBarButton: HapticTab,
           tabBarBackground: TabBarBackground,
+
+ /*
+          tabBarStyle: Platform.select({
+            ios: {
+              position: 'absolute',
+            },
+            android: {
+              elevation: 0,
+              borderTopWidth: 0,
+              marginTop: 0,
+              paddingTop: 0,
+            },
+            default: {
+              marginTop: 0,
+              paddingTop: 0,
+            },
+          }),
+  */
+ /*
           tabBarStyle: Platform.select({
             ios: {
               // Use a transparent background on iOS to show the blur effect
@@ -44,6 +63,21 @@ export default function TabLayout() {
             },
             default: {},
           }),
+*/
+        tabBarStyle: Platform.select({
+          ios: {
+//            position: 'absolute',
+            paddingBottom: 10, // Add slight padding for better spacing
+            height: 50, // Consistent height with Android          
+           },
+          android: {
+            elevation: 0, // Remove shadow to prevent overlap
+            borderTopWidth: 0, // Remove border to reduce spacing
+            paddingBottom: 0, // Ensure no extra padding
+            height: 50, // Set a fixed height for consistency
+          },
+          default: {},
+        }),
         }}>
 
         <Tabs.Screen
